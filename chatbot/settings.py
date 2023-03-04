@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'chat',
     # THIRD PARTY APPS
     'django_extensions',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 OPENAI_API_KEY = config('OPENAI_API_KEY')
+
+print(OPENAI_API_KEY)
+print(SECRET_KEY)

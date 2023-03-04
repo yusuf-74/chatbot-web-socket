@@ -1,0 +1,163 @@
+{% extends 'base.html' %}
+
+{% block sidebar %}
+<section style="background-color: #eee;">
+    <div class="container py-5">
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-10 col-lg-8 col-xl-6">
+
+                <div class="card" id="chat2">
+                    <div class="card-header d-flex justify-content-between align-items-center p-3">
+                        <h5 class="mb-0">Chat GPT light</h5>
+                    </div>
+                    <div class="card-body" id = "chat-container" data-mdb-perfect-scrollbar="true" style="position: relative; height: 400px; overflow:scroll">
+                        {% for message in messages %}
+                        <!-- HUMAN -->
+                        <div class="d-flex flex-row justify-content-end mb-4 pt-1">
+                            <div>
+                                <p class="small p-2 me-3 mb-1 text-white rounded-3 bg-primary">{{message.text}}</p>
+                            </div>
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                                alt="avatar 1" style="width: 45px; height: 100%;">
+                        </div>
+                        <!-- END HUMAN -->
+                        <!-- AI -->
+                        <div class="d-flex flex-row justify-content-start">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp"
+                                alt="avatar 1" style="width: 45px; height: 100%;">
+                            <div>
+                                <p class="small p-2 ms-3 mb-1 rounded-3" style="background-color: #f5f6f7;">{{message.response.text}}</p>
+                            </div>
+                        </div>
+                        <!-- END AI -->
+                        {% endfor %}
+                    </div>
+                    <div class="card-footer text-muted d-flex justify-content-start align-items-center p-3">
+                        
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp"
+                            alt="avatar 3" style="width: 40px; height: 100%;">
+                        <input type="text" class="form-control form-control-lg" id="message-text" name="text"
+                            placeholder="Type message" required>
+                        <button type='submit' class="btn btn-primary" id = "send-button" style = "margin:0 0 0 16px;"><i class="fas fa-paper-plane"></i></button>
+                        
+                    </div>
+                
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</section>
+<script>
+
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/chat/'
+    );
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        chatHolder = document.querySelector('#chat-container')
+        chatHolder.scrollTop = chatHolder.scrollHeight;
+        if (data.type === 'human')
+        {
+            chatHolder.appendChild(buildMessage(data.message, data.type));
+            chatHolder.appendChild(buildMessage("...", "waiting"));
+        }
+        else
+        {
+            chatHolder.removeChild(chatHolder.lastChild);
+            chatHolder.appendChild(buildMessage(data.message, data.type));
+        }
+        // Select the chat container element
+        const chatContainer = document.getElementById('chat-container');
+        // Scroll to the bottom of the chat container
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+        
+    };
+
+    chatSocket.onclose = function(e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#message-text').focus();
+    document.querySelector('#message-text').onkeyup = function(e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#send-button').click();
+        }
+    };
+
+    document.querySelector('#send-button').onclick = function(e) {
+        const messageInputDom = document.querySelector('#message-text');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+        messageInputDom.value = '';
+    };
+
+    function buildMessage(message , type) {
+        if (type === 'human')
+        {
+            const messageContainerDiv = document.createElement('div');
+            messageContainerDiv.classList.add('d-flex','flex-row','justify-content-end','mb-4','pt-1');
+            const messageDiv = document.createElement('div');
+            const messageP = document.createElement('p');
+            messageP.classList.add('small','p-2','ms-3','mb-1','text-white','rounded-3', 'bg-primary');
+            messageP.textContent = message;
+
+            avatarImg = document.createElement('img');
+            avatarImg.src = 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3-bg.webp';
+            avatarImg.alt = 'avatar 1';
+            avatarImg.style.width = '45px';
+            avatarImg.style.height = '100%';
+            messageContainerDiv.appendChild(avatarImg);
+            messageContainerDiv.appendChild(messageDiv);
+            messageDiv.appendChild(messageP);
+            return messageContainerDiv;
+        }
+        else if (type === 'bot')
+        {
+            const messageContainerDiv = document.createElement('div');
+            messageContainerDiv.classList.add('d-flex','flex-row','justify-content-start','mb-4','pt-1');
+            const messageDiv = document.createElement('div');
+            const messageP = document.createElement('p');
+            messageP.classList.add('small','p-2','ms-3','mb-1','rounded-3');
+            messageP.style.backgroundColor = '#f5f6f7';
+            messageP.textContent = message;
+
+            avatarImg = document.createElement('img');
+            avatarImg.src = 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp';
+            avatarImg.alt = 'avatar 1';
+            avatarImg.style.width = '45px';
+            avatarImg.style.height = '100%';
+            messageContainerDiv.appendChild(avatarImg);
+            messageContainerDiv.appendChild(messageDiv);
+            messageDiv.appendChild(messageP);
+            return messageContainerDiv;
+        }
+        else
+        {
+            const messageContainerDiv = document.createElement('div');
+            messageContainerDiv.classList.add('d-flex','flex-row','justify-content-start','mb-4','pt-1');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('spinner-border');
+            const spinnerSpan = document.createElement('span');
+            spinnerSpan.classList.add('visually-hidden');
+            spinnerSpan.textContent = 'Loading...';
+            messageDiv.appendChild(spinnerSpan);
+            avatarImg = document.createElement('img');
+            avatarImg.src = 'https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4-bg.webp';
+            avatarImg.alt = 'avatar 1';
+            avatarImg.style.width = '45px';
+            avatarImg.style.height = '100%';
+            messageContainerDiv.appendChild(avatarImg);
+            messageContainerDiv.appendChild(messageDiv);
+            return messageContainerDiv;
+        }
+    }
+</script>
+{% endblock %}

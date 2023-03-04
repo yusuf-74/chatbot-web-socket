@@ -1,0 +1,66 @@
+{% load static %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.0.1/tailwind.min.css" />
+<section style='display:flex;'>
+	<div>
+        <div class="flex flex-col items-center w-40 h-full overflow-hidden text-gray-700 bg-gray-100 rounded">
+            <a class="flex items-center w-full px-3 mt-3" href="{% url 'analytics'%}">
+                <i class="fa-solid fa-chart-line"></i>
+                <span class="ml-2 text-sm font-bold">Analytics</span>
+            </a>
+            <div class="w-full px-2">
+                <div class="flex flex-col items-center w-full mt-3 border-t border-gray-300">
+
+                    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300" href="#">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <span class="ml-2 text-sm font-medium">Search</span>
+                    </a>
+
+                </div>
+                <div class="flex flex-col items-center w-full mt-2 border-t border-gray-300">
+                    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300" href="{% url 'all_accounts'%}">
+                        <i class="fa-solid fa-money-check-dollar"></i>
+                        <span class="ml-2 text-sm font-medium">Accounts</span>
+                    </a>
+                    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300" href="{% url 'products'%}">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span class="ml-2 text-sm font-medium">Products</span>
+                    </a>
+                    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300" href="{% url 'materials'%}">
+                        <i class="fa-solid fa-toolbox"></i>
+                        <span class="ml-2 text-sm font-medium">Materials</span>
+                    </a>
+                    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300" href="{% url 'orders' %}">
+                        <i class="fa-solid fa-truck-fast"></i>
+                        <span class="ml-2 text-sm font-medium">Orders</span>
+                    </a>
+                    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300" href="{% url 'all_employees' %}">
+                        <i class="fa-solid fa-briefcase"></i>
+                        <span class="ml-2 text-sm font-medium">Employees</span>
+                    </a>
+                    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300" href="{% url 'all_suppliers' %}">
+                        <i class="fa-solid fa-parachute-box"></i>
+                        <span class="ml-2 text-sm font-medium">Suppliers</span>
+                    </a>
+                    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300" href="{% url 'all_customers' %}">
+                        <i class="fa-solid fa-person"></i>
+                        <span class="ml-2 text-sm font-medium">Customers</span>
+                    </a>
+                    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300" href="{% url 'all_salary' %}">
+                        <i class="fa-solid fa-person"></i>
+                        <span class="ml-2 text-sm font-medium">Salary</span>
+                    </a>
+                    <a class="flex items-center w-full h-12 px-3 mt-2 rounded hover:bg-gray-300" href="{% url 'all_loan' %}">
+                        <i class="fa-solid fa-person"></i>
+                        <span class="ml-2 text-sm font-medium">loans</span>
+                    </a>
+                </div>
+            </div>
+            <div class="flex flex-col items-center w-full mt-2 border-t border-gray-300" style='flex:1;'>
+                <a class="flex items-center justify-center w-full h-16 mt-auto bg-gray-200 hover:bg-gray-300" href="#">
+                    <i class="fa-regular fa-user"></i>
+                    <span class="ml-2 text-sm font-medium">Profile</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
