@@ -52,9 +52,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         await self.send(text_data=json.dumps({"message": message , "type": "human"}))
         try:
-            response = await asyncio.wait_for(sync_to_async(chatbot_response)(message), timeout=3.0)
+            response = await asyncio.wait_for(sync_to_async(chatbot_response)(message), timeout=10.0)
         except asyncio.TimeoutError:
-            response = "Sorry, I couldn't respond within 3 seconds. Please try an easier question."
+            response = "Sorry, I couldn't respond within 10 seconds. Please try an easier question."
         await self.send(text_data=json.dumps({"message": response, "type": "bot"}))
         
         

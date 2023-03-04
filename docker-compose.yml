@@ -1,0 +1,30 @@
+version: "3.9"
+services:
+  app:
+    build:
+      context: .
+      args:
+        - DEV=true
+    expose:
+      - 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    command: >
+      sh -c "
+            python3 manage.py makemigrations &&
+            python3 manage.py migrate &&
+            python3 manage.py runserver 0.0.0.0:8000"
+    env_file:
+      - ./.env
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    
+
+
